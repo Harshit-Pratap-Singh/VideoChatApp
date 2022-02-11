@@ -1,15 +1,17 @@
-var socket = io.connect('https://192.168.29.21:4000');
+let socket = io.connect("https://192.168.29.21:4000");
 
-var videoLoby = document.querySelector('#video-chat-lobby');
-var videoChat = document.querySelector('#video-chat');
-var joinButton = document.querySelector('#join');
-var peerVideo = document.querySelector('#peer-video');
-var userVideo = document.querySelector('#user-video');
-var roomName = document.querySelector('#roomName');
-var creater=false;
-var rtcPeerConnection;
-var userStream;
-var iceServers={
+let $ = (e) => document.querySelector(e);
+
+let videoLoby = $('#video-chat-lobby');
+let videoChat = $('.video-chat');
+let joinButton = $('#join');
+let peerVideo = $('#peer-video');
+let userVideo = $('#user-video');
+let roomName = $('#roomName');
+let creater=false;
+let rtcPeerConnection;
+let userStream;
+let iceServers={
     iceServers:[
         {urls:'stun:stun.services.mozilla.com'},
         {urls:'stun:stun.l.google.com:19302'},
@@ -17,6 +19,8 @@ var iceServers={
         {urls:'stun:stun3.l.google.com:19302'},
     ]
 }
+
+let endCall_user;
 
 
 joinButton.addEventListener('click', () => {
@@ -29,12 +33,15 @@ joinButton.addEventListener('click', () => {
 socket.on('created', () => {
     creater=true;
     navigator.mediaDevices.getUserMedia({
-        audio: true, video: { width: 1280, height: 720 }
+        audio: {'echoCancellation': true}, video: { facingMode: "user", width: 1280, height: 720}
     })
         .then((stream) => {
             userStream=stream;
-            videoLoby.style = 'display: none;'
             userVideo.srcObject = stream;
+            videoLoby.style = 'display: none;'
+            videoChat.style='display:flex'
+            userVideo.style='display:block'
+            $('.waiting').style='display:block'
             userVideo.onloadedmetadata = (e) => {
                 userVideo.play();
             }
@@ -45,15 +52,18 @@ socket.on('created', () => {
 })
 socket.on('joined', () => {
     navigator.mediaDevices.getUserMedia({
-        audio: true, video: { width: 1280, height: 720 }
+        audio: {'echoCancellation': true}, video: { facingMode: "user" ,width: 1280, height: 720  }
     })
         .then((stream) => {
             userStream=stream;
-            videoLoby.style = 'display: none;'
             userVideo.srcObject = stream;
+            videoLoby.style = 'display: none;'
+            videoChat.style='display:flex'
+            userVideo.style='display:block'
             userVideo.onloadedmetadata = (e) => {
                 userVideo.play();
             }
+            
             socket.emit('ready',roomName.value);
         }).catch((err) => {
             console.log(err);
@@ -71,7 +81,9 @@ socket.on('ready', () => {
         rtcPeerConnection=new RTCPeerConnection(iceServers);
         rtcPeerConnection.onicecandidate=onIceCandidateFunction;
         rtcPeerConnection.ontrack=onTrackFunction;
-        console.log(typeof(userStream));
+        $('.endCall').classList.remove('disable');
+        console.log((userStream.getTracks()[0]));
+        console.log((userStream.getTracks()[1]));
         rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);
         rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream);
         rtcPeerConnection.createOffer().then((offer)=>{
@@ -84,7 +96,7 @@ socket.on('ready', () => {
 })
 
 socket.on('candidate', (candidate) => {
-    var  iceCandidate=new RTCIceCandidate(candidate);
+    let  iceCandidate=new RTCIceCandidate(candidate);
     rtcPeerConnection.addIceCandidate(iceCandidate);
 })
 
@@ -107,19 +119,159 @@ socket.on('offer', (offer) => {
 
 socket.on('answer', (answer) => {
     rtcPeerConnection.setRemoteDescription(answer);
-   
+
+    rtcPeerConnection.onconnectionstatechange =e=>{
+        console.log(rtcPeerConnection.connectionState);
+        switch(rtcPeerConnection.connectionState){
+        case "closed":
+        case "failed":
+        case 'disconnected':
+        console.log('Failed--->',e);
+        endCall_user();
+        break;
+        default:
+            console.log("Listening Connection state");
+    }
+    }
+    
 })
 
-var onIceCandidateFunction=(event)=>{
+let onIceCandidateFunction=(event)=>{
     if(event.candidate){
         socket.emit('candidate', event.candidate,roomName.value);
     }
 }
 
-var onTrackFunction=(event)=>{
+let onTrackFunction=(event)=>{
     console.log('peervideo');
+    peerVideo.style="display:block"
+    $('.waiting').style='display:none'
     peerVideo.srcObject=event.streams[0];
+    console.log('event-->',event);
+    console.log('streams-->',event.streams[0].getTracks());
+    console.log(peerVideo.srcObject.getTracks()[1].enabled);
     peerVideo.onloadedmetadata=(e)=>{
         peerVideo.play();
     }
+    console.log("min--> p",peerVideo.srcObject.getTracks()[0].enabled);
+    userVideo.classList.add('user-animate');
 }
+
+$('.muteVideo').addEventListener('click',()=>{
+    userStream.getTracks()[1].enabled=false;
+    $('.muteVideo').classList.add('disable');
+    $('.unMuteVideo').classList.remove('disable');
+    $(".video-btn").classList.add('red');
+    $(".video-btn").classList.remove('white');
+
+})
+
+$('.unMuteVideo').addEventListener('click',()=>{
+    socket.emit('unMuteVideo',roomName.value);
+    userStream.getTracks()[1].enabled=true;
+    $('.unMuteVideo').classList.add('disable');
+    $('.muteVideo').classList.remove('disable');
+    $(".video-btn").classList.remove('red');
+    $(".video-btn").classList.add('white');
+
+})
+
+$('.muteMic').addEventListener('click',()=>{
+    userStream.getTracks()[0].enabled=false;
+    $('.muteMic').classList.add('disable');
+    $('.unMuteMic').classList.remove('disable');
+    $(".mic-btn").classList.add('red');
+    $(".mic-btn").classList.remove('white');
+})
+
+$('.unMuteMic').addEventListener('click',()=>{
+    userStream.getTracks()[0].enabled=true;
+    $('.unMuteMic').classList.add('disable');
+    $('.muteMic').classList.remove('disable');
+    $(".mic-btn").classList.remove('red');
+    $(".mic-btn").classList.add('white');
+
+})
+
+$(".endCall").addEventListener('click',()=>{
+
+    socket.emit('endCall',roomName.value);
+
+    videoLoby.style = 'display: flex;'
+    videoChat.style='display:none'
+    userVideo.style='display:none'
+    peerVideo.style="display:none"
+
+    creater=false
+
+   if(userVideo.srcObject){
+       userVideo.srcObject.getTracks().forEach(track => {
+           track.stop();
+       });
+   }
+   if(peerVideo.srcObject){
+    peerVideo.srcObject.getTracks().forEach(track => {
+        track.stop();
+        });
+    }
+
+    if(rtcPeerConnection){
+        rtcPeerConnection.ontrack=null;
+        rtcPeerConnection.onicecandidate=null;
+        rtcPeerConnection.close();
+        rtcPeerConnection=null;
+    }
+
+})
+
+socket.on('endCall', endCall_user)
+
+ endCall_user=()=>{
+    peerVideo.style="display:none"
+    $('.waiting').style='display:block'
+    userVideo.classList.remove('user-animate');
+
+    creater=true;
+
+    if(peerVideo.srcObject){
+        peerVideo.srcObject.getTracks().forEach(track => {
+            track.stop();
+            });
+        }
+
+    if(rtcPeerConnection){
+        rtcPeerConnection.ontrack=null;
+        rtcPeerConnection.onicecandidate=null;
+        rtcPeerConnection.close();
+        rtcPeerConnection=null;
+    }
+    
+}
+
+// window.addEventListener('unload', function (e) {
+//     socket.emit('endCall',roomName.value);
+// });
+
+
+
+
+
+// Dots
+// ====
+let dots = $(".dots");
+
+// Function
+// ========
+function animate(element, className) {
+  element.classList.add(className);
+  setTimeout(() => {
+    element.classList.remove(className);
+    setTimeout(() => {
+      animate(element, className);
+    }, 500);
+  }, 2500);
+}
+
+// Execution
+// =========
+animate(dots, "dots--animate");

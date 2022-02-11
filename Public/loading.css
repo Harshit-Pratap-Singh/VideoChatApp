@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap");
+/* body {
+  display: grid;
+  place-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 2px;
+  box-sizing: border-box;
+  overflow: hidden;
+} */
+
+.waiting {
+  font-family: "Open Sans", -apple-system, "Segoe UI", sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #54bab9;
+  box-sizing: border-box;
+  backface-visibility: hidden;
+}
+.dots {
+  display: inline-flex;
+}
+.dots--animate .dot.z {
+  -webkit-animation: scale 0.8s 0.2s forwards;
+  animation: scale 0.8s 0.2s forwards;
+}
+.dots--animate .dot.f,
+.dots--animate .dot.s {
+  -webkit-animation: right 0.5s forwards;
+  animation: right 0.5s forwards;
+}
+.dots--animate .dot.l {
+  -webkit-animation: rightDown 0.4s 0.1s forwards linear,
+    drop 2s 0.4s forwards linear;
+  animation: rightDown 0.4s 0.1s forwards linear, drop 2s 0.4s forwards linear;
+}
+:root {
+  --width: 6px;
+  --ml: 4px;
+}
+.dot {
+  display: inline-block;
+  width: var(--width);
+  height: var(--width);
+  background: #54bab9;
+  border-radius: 10px;
+  position: relative;
+  margin-left: var(--ml);
+}
+.dot.z {
+  position: absolute;
+  transform: scale(0);
+}
+@-webkit-keyframes scale {
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes scale {
+  100% {
+    transform: scale(1);
+  }
+}
+.dot.f,
+.dot.s {
+  transform: translateX(0px);
+}
+@-webkit-keyframes right {
+  100% {
+    transform: translateX(var(--ml)) translateX(var(--width));
+  }
+}
+@keyframes right {
+  100% {
+    transform: translateX(var(--ml)) translateX(var(--width));
+  }
+}
+.dot.t {
+  background: transparent;
+}
+.dot .l {
+  margin-left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+@-webkit-keyframes rightDown {
+  50% {
+    top: 4px;
+    left: 16px;
+  }
+  100% {
+    top: 12px;
+    left: 24px;
+  }
+}
+@keyframes rightDown {
+  50% {
+    top: 4px;
+    left: 16px;
+  }
+  100% {
+    top: 12px;
+    left: 24px;
+  }
+}
+@-webkit-keyframes drop {
+  100% {
+    transform: translate(70px, calc(35px + (100vh / 2)));
+  }
+}
+@keyframes drop {
+  100% {
+    transform: translate(70px, calc(35px + (100vh / 2)));
+  }
+}

@@ -39,7 +39,7 @@ io.on('connection',(socket)=>{
         else{
             socket.emit('full');
         }
-        console.log(rooms);
+        console.log('rooms-->',rooms);
 
     })
 
@@ -62,5 +62,11 @@ io.on('connection',(socket)=>{
         console.log('answer');
         socket.broadcast.to(roomName).emit('answer',answer);
     });
+
+    socket.on('endCall',(roomName)=>{
+        console.log('endCall');
+        socket.leave(roomName);
+        socket.broadcast.to(roomName).emit('endCall');
+    })
 
 })
