@@ -20,7 +20,7 @@ let iceServers={
     ]
 }
 
-let endCall_user;
+// let endCall_user;
 
 
 joinButton.addEventListener('click', () => {
@@ -226,7 +226,7 @@ $(".endCall").addEventListener('click',()=>{
 
 socket.on('endCall', endCall_user)
 
- endCall_user=()=>{
+ function endCall_user(){
     peerVideo.style="display:none"
     $('.waiting').style='display:block'
     userVideo.classList.remove('user-animate');
