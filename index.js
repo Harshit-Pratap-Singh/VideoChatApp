@@ -1,3 +1,6 @@
+require('dotenv').config();
+
+
 const express = require("express");
 const socket = require("socket.io");
 const app=express();
@@ -11,7 +14,7 @@ var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
 
-const server=httpsServer.listen(4000,"192.168.29.21",(err)=>{
+const server=httpsServer.listen(process.env.PORT || 4000,"192.168.29.21",(err)=>{
     if(err)console.log(err);
     else
     console.log("Server Started at port 4000");
