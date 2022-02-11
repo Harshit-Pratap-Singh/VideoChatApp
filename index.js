@@ -6,15 +6,15 @@ const socket = require("socket.io");
 const app=express();
 var fs = require('fs');
 var http = require('http');
-var https = require('https');
-var credentials = {key: fs.readFileSync('key.pem'),
-cert: fs.readFileSync('cert.pem')};
+// var https = require('https');
+// var credentials = {key: fs.readFileSync('key.pem'),
+// cert: fs.readFileSync('cert.pem')};
 
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
+// var httpsServer = https.createServer(credentials, app);
 
 
-const server=httpsServer.listen(process.env.PORT || 4000,"192.168.29.21",(err)=>{
+const server=httpServer.listen(process.env.PORT || 4000,(err)=>{
     if(err)console.log(err);
     else
     console.log("Server Started at port 4000");

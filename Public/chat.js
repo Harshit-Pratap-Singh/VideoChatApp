@@ -1,4 +1,4 @@
-let socket = io.connect("https://192.168.29.21:4000");
+let socket = io();
 
 let $ = (e) => document.querySelector(e);
 
