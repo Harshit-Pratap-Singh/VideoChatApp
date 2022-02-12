@@ -208,8 +208,6 @@ input:focus {
   text-transform: uppercase;
 }
 
-
-
 @media only screen and (max-width: 768px) {
   #video-chat-lobby {
     padding: 1.2rem;
@@ -244,21 +242,15 @@ input:focus {
     line-height: 1.5rem;
   }
 
-  :root{
-    --vh:0;
-  }
-  
-  
-
-
   #user-video,
   #peer-video {
     width: 95vw;
-    height: calc(var(--vh, 1vh) * 90);
-
+    height: 80vh;
+    /* height: calc(var(--vh, 1vh) * 90); */
   }
   #peer-video {
-    height: calc(var(--vh, 1vh) * 95);
+    height: 85vh;
+    /* height: calc(var(--vh, 1vh) * 95); */
   }
 
   @keyframes userScale {
