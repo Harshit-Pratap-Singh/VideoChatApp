@@ -114,3 +114,9 @@
     transform: translate(70px, calc(35px + (100vh / 2)));
   }
 }
+
+@media only screen and (max-width: 768px) {
+  .waiting {
+    font-size: 5vw;
+  }
+}

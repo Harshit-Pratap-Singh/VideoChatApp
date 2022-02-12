@@ -241,4 +241,21 @@ input:focus {
     border-top-right-radius: 2px;
     line-height: 1.5rem;
   }
+
+  #user-video,
+  #peer-video {
+    width: 95vw;
+    height: 90vh;
+  }
+  #peer-video {
+    height: 95vh;
+  }
+
+  @keyframes userScale {
+    100% {
+      transform: scale(0.2, 0.2) translate(190%, 220%) rotateY(180deg);
+      border: 14px solid #54bab9;
+      border-radius: 2.5rem;
+    }
+  }
 }
