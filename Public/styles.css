@@ -50,7 +50,7 @@ video::-webkit-media-controls-start-playback-button {
   border-radius: 1rem;
   background-color: black;
   width: 80vw;
-  /* height: calc(70vw / 1.7777778); */
+  height: 80vh;
   transform: rotateY(180deg);
 }
 
