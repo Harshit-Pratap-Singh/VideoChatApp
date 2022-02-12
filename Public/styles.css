@@ -248,19 +248,17 @@ input:focus {
     --vh:0;
   }
   
-  #body {
-    height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-    height: calc(var(--vh, 1vh) * 100);
-  }
+  
 
 
   #user-video,
   #peer-video {
     width: 95vw;
-    height: 90vh;
+    height: calc(var(--vh, 1vh) * 90);
+
   }
   #peer-video {
-    height: 95vh;
+    height: calc(var(--vh, 1vh) * 95);
   }
 
   @keyframes userScale {
