@@ -176,7 +176,6 @@ $('.muteVideo').addEventListener('click',()=>{
 })
 
 $('.unMuteVideo').addEventListener('click',()=>{
-    socket.emit('unMuteVideo',roomName.value);
     userStream.getTracks()[1].enabled=true;
     $('.unMuteVideo').classList.add('disable');
     $('.muteVideo').classList.remove('disable');
@@ -257,9 +256,7 @@ socket.on('endCall', endCall_user)
     
 }
 
-// window.addEventListener('unload', function (e) {
-//     socket.emit('endCall',roomName.value);
-// });
+
 
 
 
@@ -287,9 +284,3 @@ function animate(element, className) {
 animate(dots, "dots--animate");
 
 
-// window.addEventListener('resize', () => {
-//     // We execute the same script as before
-//     let vh = window.innerHeight * 0.01;
-//     document.documentElement.style.setProperty('--vh', `${vh}px`);
-//     // alert(vh);
-//   });
