@@ -18,12 +18,12 @@ const server = httpServer.listen(process.env.PORT || 4000, (err) => {
   else console.log("Server Started at port 4000");
 });
 
-// app.use(express.static('Public'));
+app.use(express.static("Public"));
 
 // var io = socket(server, {
 //   cors: {
 //     origin: "http://127.0.0.1:5500",
-    
+
 //   },
 // });
 var io = socket(server);
