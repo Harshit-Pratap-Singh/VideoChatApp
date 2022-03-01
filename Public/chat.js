@@ -1,7 +1,7 @@
 // let socket = io("https://localhost:4000/");
 
 const socket = io("https://video-chat-hps.herokuapp.com/", {
-  withCredentials: true,
+//   withCredentials: true,
 });
 
 let $ = (e) => document.querySelector(e);

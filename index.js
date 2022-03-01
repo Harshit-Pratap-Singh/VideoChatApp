@@ -22,8 +22,8 @@ const server = httpServer.listen(process.env.PORT || 4000, (err) => {
 
 var io = socket(server, {
   cors: {
-    origin: "http://127.0.0.1:5500/",
-    credentials: true,
+    origin: "http://127.0.0.1:5500",
+    
   },
 });
 // var io = socket(server);
