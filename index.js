@@ -20,13 +20,13 @@ const server = httpServer.listen(process.env.PORT || 4000, (err) => {
 
 // app.use(express.static('Public'));
 
-// var io = socket(server, {
-//   cors: {
-//     origin: "http://127.0.0.1:5500/",
-//     credentials: true,
-//   },
-// });
-var io = socket(server);
+var io = socket(server, {
+  cors: {
+    origin: "http://127.0.0.1:5500/",
+    credentials: true,
+  },
+});
+// var io = socket(server);
 
 io.on("connection", (socket) => {
   console.log("Connected: ", socket.id);
